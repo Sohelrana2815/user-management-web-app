@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import useAuth from "../hooks/useAuth";
 
 const LoginPage = () => {
   const {
@@ -7,7 +8,23 @@ const LoginPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+
+  const { login, logout } = useAuth();
+
+  const onSubmit = async (data) => {
+    const { email, password } = data;
+    try {
+      const userCredential = await login(email, password);
+      console.log(userCredential);
+    } catch (error) {
+      console.error("Login error:", error.message);
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
   return (
     <>
       <h2 className="absolute text-2xl font-bold p-4">User Management App</h2>
@@ -128,6 +145,10 @@ const LoginPage = () => {
         >
           {/* Empty or additional overlay if needed */}
         </div>
+        {/* logout */}
+        <button className="btn btn-primary" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </>
   );

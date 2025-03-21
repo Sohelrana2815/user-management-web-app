@@ -1,24 +1,31 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import useAuth from "../hooks/useAuth";
+import { updateProfile } from "firebase/auth";
 const RegistrationPage = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
   const { signup } = useAuth();
   const onSubmit = async (data) => {
-    const { email, password } = data;
+    const { name, email, password } = data;
     try {
+      // Register the user with email and password
       const userCredential = await signup(email, password);
-      console.log(userCredential);
+      // Update the user's display name
+      await updateProfile(userCredential.user, {
+        displayName: name,
+      });
+      console.log(
+        "User registered with display name:",
+        userCredential.user.name
+      );
     } catch (error) {
       console.error("Registration error:", error.message);
     }
   };
-  console.log(watch("password"));
   return (
     /*
     Parent container: flex -> display columns side by side min-h-screen ->
@@ -60,21 +67,21 @@ const RegistrationPage = () => {
                 {/* Full Name Field */}
                 <div className="mb-4">
                   <label
-                    htmlFor="fullName"
+                    htmlFor="name"
                     className="block text-sm font-bold mb-1"
                   >
                     Full Name
                   </label>
                   <input
                     type="text"
-                    {...register("fullName", {
+                    {...register("name", {
                       required: "*Name is required",
                     })}
                     placeholder="Enter your full name"
                     className="input input-bordered w-full"
                   />
-                  {errors.fullName && (
-                    <p className="text-red-700">{errors.fullName.message}</p>
+                  {errors.name && (
+                    <p className="text-red-700">{errors.name.message}</p>
                   )}
                 </div>
 

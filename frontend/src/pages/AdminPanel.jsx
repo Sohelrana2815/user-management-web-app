@@ -1,10 +1,10 @@
 
 const AdminPanel = () => {
-    return (
-        <div>
-            
-        </div>
-    );
+  return (
+    <div>
+     
+    </div>
+  );
 };
 
 export default AdminPanel;
