@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import useAuth from "../hooks/useAuth";
 const RegistrationPage = () => {
   const {
     register,
@@ -7,8 +8,16 @@ const RegistrationPage = () => {
     watch,
     formState: { errors },
   } = useForm();
-
-  const onSubmit = (data) => console.log(data);
+  const { signup } = useAuth();
+  const onSubmit = async (data) => {
+    const { email, password } = data;
+    try {
+      const userCredential = await signup(email, password);
+      console.log(userCredential);
+    } catch (error) {
+      console.error("Registration error:", error.message);
+    }
+  };
   console.log(watch("password"));
   return (
     /*
@@ -108,29 +117,6 @@ const RegistrationPage = () => {
                   />
                   {errors.password && (
                     <p className="text-red-700">{errors.password.message}</p>
-                  )}
-                </div>
-
-                {/* Confirm Password Field */}
-                <div className="mb-4">
-                  <label
-                    htmlFor="confirmPassword"
-                    className="block text-sm font-bold mb-1"
-                  >
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    {...register("confirmPassword", {
-                      required: "*Confirm password is required",
-                    })}
-                    placeholder="Re-enter your password"
-                    className="input input-bordered w-full"
-                  />
-                  {errors.confirmPassword && (
-                    <p className="text-red-700">
-                      {errors.confirmPassword.message}
-                    </p>
                   )}
                 </div>
 
