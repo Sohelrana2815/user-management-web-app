@@ -1,37 +1,42 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
-import useAuth from "../hooks/useAuth";
-
-const Login = () => {
+import useAuth from "../../hooks/useAuth";
+import { updateProfile } from "firebase/auth";
+const Registration = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const { login, logout } = useAuth();
-
+  const { signup } = useAuth();
   const onSubmit = async (data) => {
-    const { email, password } = data;
+    const { name, email, password } = data;
     try {
-      const userCredential = await login(email, password);
-      console.log(userCredential);
+      // Register the user with email and password
+      const userCredential = await signup(email, password);
+      // Update the user's display name
+      await updateProfile(userCredential.user, {
+        displayName: name,
+      });
+      console.log(
+        "User registered with display name:",
+        userCredential.user.name
+      );
     } catch (error) {
-      console.error("Login error:", error.message);
+      console.error("Registration error:", error.message);
     }
   };
-
-  const handleLogout = async () => {
-    await logout();
-  };
-
   return (
+    /*
+    Parent container: flex -> display columns side by side min-h-screen ->
+    full viewport height
+    */
     <>
       <h2 className="absolute text-2xl font-bold p-4">User Management App</h2>
       <div className="flex min-h-screen">
         {/* 
         LEFT SECTION (1/2):
-        Holds the Login card in the center
+        Holds the Registration card in the center
         w-1/2 -> half width
         flex-col -> column direction
         justify-center -> center vertically
@@ -39,7 +44,7 @@ const Login = () => {
         p-8 -> padding
         bg-base-100 -> DaisyUI background color (adjustable)
       */}
-        <div className="w-1/2 border flex flex-col justify-center items-center p-8 bg-base-100">
+        <div className="w-1/2 flex flex-col justify-center items-center p-8 bg-base-100">
           {/* 
           Card container:
           w-full max-w-sm -> limit the card width
@@ -53,10 +58,33 @@ const Login = () => {
           */}
             <div className="card-body p-6">
               {/* Card Title or Form Title */}
-              <h2 className="card-title text-3xl font-bold mb-4">Login</h2>
+              <h2 className="card-title text-3xl font-bold mb-4">
+                Create an Account
+              </h2>
 
               {/* Form starts here */}
               <form onSubmit={handleSubmit(onSubmit)}>
+                {/* Full Name Field */}
+                <div className="mb-4">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-bold mb-1"
+                  >
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    {...register("name", {
+                      required: "*Name is required",
+                    })}
+                    placeholder="Enter your full name"
+                    className="input input-bordered w-full"
+                  />
+                  {errors.name && (
+                    <p className="text-red-700">{errors.name.message}</p>
+                  )}
+                </div>
+
                 {/* Email Field */}
                 <div className="mb-4">
                   <label
@@ -68,13 +96,13 @@ const Login = () => {
                   <input
                     type="email"
                     {...register("email", {
-                      required: "*Email address is required",
+                      required: "*Email address required",
                     })}
                     placeholder="Enter your email"
-                    className="input w-full"
+                    className="input input-bordered w-full"
                   />
                   {errors.email && (
-                    <span className="text-red-700">{errors.email.message}</span>
+                    <p className="text-red-700">{errors.email.message}</p>
                   )}
                 </div>
 
@@ -91,39 +119,28 @@ const Login = () => {
                     {...register("password", {
                       required: "*Password is required",
                     })}
-                    placeholder="Enter your password"
-                    className="input w-full"
+                    placeholder="Create a password"
+                    className="input input-bordered w-full"
                   />
                   {errors.password && (
-                    <span className="text-red-700">
-                      {errors.password.message}
-                    </span>
+                    <p className="text-red-700">{errors.password.message}</p>
                   )}
                 </div>
 
-                {/* Actions: Login button & Forgot Password link */}
+                {/* Actions: Sign Up button */}
                 <div className="flex items-center justify-between mb-2">
                   <button type="submit" className="btn btn-primary">
-                    Sign In
+                    Sign Up
                   </button>
-                  <a
-                    href="#forgot-password"
-                    className="text-sm text-blue-500 hover:text-blue-700"
-                  >
-                    Forgot Password?
-                  </a>
                 </div>
               </form>
               {/* End of Form */}
 
-              {/* Sign Up link if user doesn't have an account */}
+              {/* Sign In link if user already has an account */}
               <p className="text-sm text-center">
-                Don’t have an account?{" "}
-                <Link
-                  to="registration"
-                  className="text-blue-500 hover:text-blue-700"
-                >
-                  Sign up
+                Already have an account?{" "}
+                <Link to="/" className="text-blue-500 hover:text-blue-700">
+                  Log in
                 </Link>
               </p>
             </div>
@@ -138,20 +155,16 @@ const Login = () => {
         style -> add your image path
       */}
         <div
-          className="w-1/2 bg-no-repeat bg-cover"
+          className="w-1/2 bg-cover bg-center"
           style={{
-            backgroundImage: "url('../src/assets/login-wallpaper.jpg')",
+            backgroundImage: "url('../src/assets/register-wallpaper.jpg')",
           }}
         >
           {/* Empty or additional overlay if needed */}
         </div>
-        {/* logout */}
-        <button className="btn btn-primary" onClick={handleLogout}>
-          Logout
-        </button>
       </div>
     </>
   );
 };
 
-export default Login;
+export default Registration;
