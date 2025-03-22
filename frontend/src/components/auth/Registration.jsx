@@ -2,28 +2,61 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { updateProfile } from "firebase/auth";
+import Swal from "sweetalert2";
 const Registration = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signup } = useAuth();
+  // get firebase things
+  const { signup, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  // Onsubmit hook form
   const onSubmit = async (data) => {
     const { name, email, password } = data;
     try {
-      // Register the user with email and password
+      // 1. Register user with Firebase
       const userCredential = await signup(email, password);
       // Update the user's display name
       await updateProfile(userCredential.user, {
         displayName: name,
       });
-      console.log(
-        "User registered with display name:",
-        userCredential.user.name
-      );
+      // 2. Send user data to your backend (Express.js)
+      const response = await fetch("http://localhost:5000/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          createdAt: new Date(),
+          lastLogin: new Date(),
+          status: "active",
+        }),
+      });
+      if (response.status === 201) {
+        handleLogout();
+        Swal.fire({
+          title: "Registration success",
+          icon: "success",
+          draggable: true,
+        });
+      }
+      console.log("User registered and data stored successfully");
+
+      if (!response.ok) {
+        throw new Error("Failed to store user data in database");
+      }
     } catch (error) {
       console.error("Registration error:", error.message);
+      // Handle duplicate email error
+      if (error.message.includes("Email already exists")) {
+        alert("Error email already exist.");
+      }
     }
   };
   return (

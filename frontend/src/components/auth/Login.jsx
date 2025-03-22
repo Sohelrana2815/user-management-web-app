@@ -9,21 +9,27 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const { login, logout } = useAuth();
+  const { login } = useAuth();
 
   const onSubmit = async (data) => {
     const { email, password } = data;
     try {
       const userCredential = await login(email, password);
+
+      // Update last login time in MOngoDb
+      await fetch(`/api/users/${encodeURIComponent(email)}`, {
+        method: "PATCH",
+      });
+      console.log("Login successful");
       console.log(userCredential);
     } catch (error) {
       console.error("Login error:", error.message);
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-  };
+  // const handleLogout = async () => {
+  //   await logout();
+  // };
 
   return (
     <>
@@ -146,9 +152,9 @@ const Login = () => {
           {/* Empty or additional overlay if needed */}
         </div>
         {/* logout */}
-        <button className="btn btn-primary" onClick={handleLogout}>
+        {/* <button className="btn btn-primary">
           Logout
-        </button>
+        </button> */}
       </div>
     </>
   );
