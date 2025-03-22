@@ -1,6 +1,6 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import connectDB from './config/db.js';
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
 
 // Load environment variables
 dotenv.config();
@@ -12,8 +12,8 @@ const app = express();
 connectDB();
 
 // Basic route for testing
-app.get('/', (req, res) => {
-  res.send('Server is running');
+app.get("/", (req, res) => {
+  res.send("Server is running");
 });
 
 // Start the server
