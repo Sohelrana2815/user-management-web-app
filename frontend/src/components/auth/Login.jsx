@@ -1,15 +1,20 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
+  const { login } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/"; // Default redirect path
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
-
-  const { login } = useAuth();
 
   const onSubmit = async (data) => {
     const { email, password } = data;
@@ -20,7 +25,8 @@ const Login = () => {
       await fetch(`/api/users/${encodeURIComponent(email)}`, {
         method: "PATCH",
       });
-      console.log("Login successful");
+      reset();
+      navigate(from, { replace: true });
       console.log(userCredential);
     } catch (error) {
       console.error("Login error:", error.message);
