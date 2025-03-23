@@ -63,7 +63,7 @@ const AdminPanel = () => {
   const isAllSelected = users.length > 0 && selectedIds.length === users.length;
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto xl:max-w-7xl mx-auto">
       <table className="table">
         <thead>
           <tr>
@@ -110,9 +110,7 @@ const AdminPanel = () => {
                 </td>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
-                <td title={fullDate} className="cursor-pointer">
-                  {relative}
-                </td>
+                <td title={fullDate}>{relative}</td>
                 {/* Use the title attribute for a native tooltip */}
               </tr>
             );
@@ -121,7 +119,6 @@ const AdminPanel = () => {
       </table>
 
       {/* Display the selected IDs for debugging or informational purposes */}
-      <h2>Result: {selectedIds.join(", ")}</h2>
     </div>
   );
 };

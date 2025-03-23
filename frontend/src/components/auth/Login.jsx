@@ -7,7 +7,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/"; // Default redirect path
+  const from = location.state?.from?.pathname || "/adminPanel"; // Default redirect path
 
   const {
     register,
