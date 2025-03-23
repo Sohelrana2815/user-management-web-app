@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,21 +21,41 @@ const Login = () => {
     try {
       const userCredential = await login(email, password);
 
-      // Update last login time in MOngoDb
-      await fetch(`/api/users/${encodeURIComponent(email)}`, {
-        method: "PATCH",
-      });
+      // Update last login time in MongoDb
+      const response = await fetch(
+        `http://localhost:5000/api/users/${encodeURIComponent(email)}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            lastSignInTime: userCredential?.user?.metadata?.lastSignInTime,
+          }),
+        }
+      );
+      if (response.ok) {
+        alert("updated");
+      }
+      if (!response.ok) {
+        throw new Error("Failed to update last login time");
+      }
+
       reset();
       navigate(from, { replace: true });
-      console.log(userCredential);
+      console.log(
+        "login page creden...",
+        userCredential.user.metadata.lastSignInTime
+      );
     } catch (error) {
       console.error("Login error:", error.message);
     }
   };
+  // logout
 
-  // const handleLogout = async () => {
-  //   await logout();
-  // };
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <>
@@ -138,6 +158,12 @@ const Login = () => {
                   Sign up
                 </Link>
               </p>
+              <button
+                className="btn btn-error text-white"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
             </div>
           </div>
         </div>
