@@ -8,6 +8,7 @@ const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [serverLoading, setServerLoading] = useState(true);
   const [error, setError] = useState(null);
+  // Stored selected users ids
   const [selectedIds, setSelectedIds] = useState([]);
   const headerCheckboxRef = useRef(null);
 
@@ -31,6 +32,7 @@ const AdminPanel = () => {
   }, []);
 
   // Update the header checkbox's indeterminate state
+
   useEffect(() => {
     if (headerCheckboxRef.current) {
       headerCheckboxRef.current.indeterminate =
@@ -51,7 +53,9 @@ const AdminPanel = () => {
 
   // Toggle selection for an individual user
   const handleRowCheckboxChange = (id) => {
+    console.log(id);
     setSelectedIds((prev) =>
+      // If id is already in the list, remove it; otherwise, add it.
       prev.includes(id) ? prev.filter((userId) => userId !== id) : [...prev, id]
     );
   };
@@ -88,16 +92,15 @@ const AdminPanel = () => {
           {users.map((user) => {
             // Create a Day.js object from user.lastLogin
             const lastLoginDayjs = dayjs(user.lastLogin);
-
             // Relative time format, e.g. "5 minutes ago"
             const relative = lastLoginDayjs.fromNow();
-
-            // Full date/time format for tooltip, e.g. "October 12, 2024 15:45:30"
+            // Full date/time format for tooltip, e.g. "October 2, 2000 15:45:30"
             const fullDate = lastLoginDayjs.format("MMMM DD, YYYY HH:mm:ss");
 
             return (
               <tr key={user._id}>
                 {/* Individual row checkbox */}
+
                 <td>
                   <label>
                     <input
@@ -110,8 +113,8 @@ const AdminPanel = () => {
                 </td>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
-                <td title={fullDate}>{relative}</td>
                 {/* Use the title attribute for a native tooltip */}
+                <td title={fullDate}>{relative}</td>
               </tr>
             );
           })}
