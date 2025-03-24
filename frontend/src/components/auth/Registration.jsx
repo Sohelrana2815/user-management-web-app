@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
-import useAuth from "../../hooks/useAuth";
-import { updateProfile } from "firebase/auth";
+
 import Swal from "sweetalert2";
 const Registration = () => {
   const {
@@ -9,37 +8,31 @@ const Registration = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  // get firebase things
-  const { signup, logout } = useAuth();
-
-  const handleLogout = async () => {
-    await logout();
-  };
 
   // Onsubmit hook form
   const onSubmit = async (data) => {
     const { name, email, password } = data;
+    console.log(data);
+
     try {
-      // 1. Register user with Firebase
-      const userCredential = await signup(email, password);
-      // Update the user's display name
-      await updateProfile(userCredential.user, {
-        displayName: name,
-      });
-      // 2. Send user data to your backend (Express.js)
+      // 1. Send user data to your backend (Express.js)
       const response = await fetch("http://localhost:5000/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
           email,
+          password,
           createdAt: new Date(),
-          lastLogin: new Date(),
           status: "active",
         }),
       });
+      // If the response is 201, show success
       if (response.status === 201) {
-        handleLogout();
+        // Parse the user doc from the response
+        const userData = await response.json();
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+        console.log("User Data:", userData);
         Swal.fire({
           title: "Registration success",
           icon: "success",
@@ -48,7 +41,12 @@ const Registration = () => {
       }
       console.log("User registered and data stored successfully");
 
-      if (!response.ok) {
+      if (!response.ok || response.status === 400) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Email already exist!",
+        });
         throw new Error("Failed to store user data in database");
       }
     } catch (error) {

@@ -1,10 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
-import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
-  const { login, logout } = useAuth();
-
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/adminPanel"; // Default redirect path
@@ -17,20 +14,18 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const { email, password } = data;
+    const { email } = data;
     try {
-      const userCredential = await login(email, password);
-
       // Update last login time in MongoDb
       const response = await fetch(
-        `http://localhost:5000/api/users/${encodeURIComponent(email)}`,
+        `http://localhost:5000/api/users/email/${encodeURIComponent(email)}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            lastSignInTime: userCredential?.user?.metadata?.lastSignInTime,
+            lastLogin: new Date(),
           }),
         }
       );
@@ -44,18 +39,14 @@ const Login = () => {
       reset();
       navigate(from, { replace: true });
       console.log(
-        "login page creden...",
-        userCredential.user.metadata.lastSignInTime
+        "login page creden..."
+        // userCredential.user.metadata.lastSignInTime
       );
     } catch (error) {
       console.error("Login error:", error.message);
     }
   };
   // logout
-
-  const handleLogout = async () => {
-    await logout();
-  };
 
   return (
     <>
@@ -158,12 +149,6 @@ const Login = () => {
                   Sign up
                 </Link>
               </p>
-              <button
-                className="btn btn-error text-white"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
             </div>
           </div>
         </div>
