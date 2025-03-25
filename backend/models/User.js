@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import bcrypt from "bcryptjs";
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: {
@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     match: /^\S+@\S+\.\S+$/,
   },
+  password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   lastLogin: { type: Date, default: Date.now },
   status: {
@@ -17,6 +18,21 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// Create unique index
+// Hash password before saving the user document
+userSchema.pre("save", async function (next) {
+  // Only hash the password if it has been modified (or is new)
+  if (!this.isModified("password")) return next();
 
-export default mongoose.model("User", userSchema);
+  try {
+    // Generate a salt with a factor of 10 (adjustable)
+    const salt = await bcrypt.genSalt(10);
+    // Hash the password using the salt
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+const User = mongoose.model("User", userSchema);
+export default User;

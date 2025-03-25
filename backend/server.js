@@ -5,21 +5,21 @@ import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
-
 const app = express();
-
-// Middleware
+app.use(express.json());
 app.use(
   cors({
     origin: ["http://localhost:5173", "http://localhost:5174"],
   })
 );
-app.use(express.json());
 
-// Database Connection
+// Connect to MongoDB
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("MongoDB connected");
   } catch (error) {
     console.error("MongoDB connection error:", error);
