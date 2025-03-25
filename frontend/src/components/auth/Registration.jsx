@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
-
+import { Link, useNavigate } from "react-router";
+// import LogoutButton from "./LogoutButton"; // import the component
 import Swal from "sweetalert2";
 const Registration = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -16,7 +17,7 @@ const Registration = () => {
 
     try {
       // 1. Send user data to your backend (Express.js)
-      const response = await fetch("http://localhost:5000/api/users", {
+      const response = await fetch("http://localhost:5000/api/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -29,15 +30,12 @@ const Registration = () => {
       });
       // If the response is 201, show success
       if (response.status === 201) {
-        // Parse the user doc from the response
-        const userData = await response.json();
-        localStorage.setItem("currentUser", JSON.stringify(userData));
-        console.log("User Data:", userData);
         Swal.fire({
-          title: "Registration success",
+          title: "Registration success. Please login.",
           icon: "success",
           draggable: true,
         });
+        navigate("/");
       }
       console.log("User registered and data stored successfully");
 
@@ -63,6 +61,10 @@ const Registration = () => {
     full viewport height
     */
     <>
+      {/* You can place the logout button where it makes sense in your layout */}
+      {/* <div className="btn btn-primary">
+        <LogoutButton />
+      </div> */}
       <h2 className="absolute text-2xl font-bold p-4">User Management App</h2>
       <div className="flex min-h-screen">
         {/* 

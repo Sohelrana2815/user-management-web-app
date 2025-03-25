@@ -1,26 +1,27 @@
-// import { Navigate, useLocation } from "react-router";
-// import PropTypes from "prop-types";
+import { Navigate } from "react-router";
 
-// const PrivateRoute = ({ children }) => {
-//   const location = useLocation();
-//   console.log("Location at private route:", location);
+const PrivateRoute = ({ children }) => {
+  // 1. check if we have a user in local storage
 
-//   if (loading) {
-//     return (
-//       <span className="loading loading-ring loading-xl text-blue-700"></span>
-//     );
-//   }
-//   if (!currentUser) {
-//     // Redirect to login page, preserving the location tried to access
+  const storedUser = localStorage.getItem("currentUser");
 
-//     return <Navigate to="/" state={{ from: location }} replace />;
-//   }
+  // 2. If there's no user data, user is not authenticated -> redirect to login page
 
-//   return children;
-// };
+  if (!storedUser) {
+    return <Navigate to="/" replace />;
+  }
 
-// PrivateRoute.propTypes = {
-//   children: PropTypes.node.isRequired,
-// };
+  //3. Parse user to check status
 
-// export default PrivateRoute;
+  const user = JSON.parse(storedUser);
+
+  if (user.status === "blocked") {
+    // If user is blocked, redirect to login page
+
+    return <Navigate to="/" replace />;
+  }
+  // If everything is good, render the protected page
+  return children;
+};
+
+export default PrivateRoute;

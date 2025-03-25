@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,30 +15,36 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const { email } = data;
+    const { email, password } = data;
+    console.log(data);
     try {
-      // Update last login time in MongoDb
-      const response = await fetch(
-        `http://localhost:5000/api/users/email/${encodeURIComponent(email)}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            lastLogin: new Date(),
-          }),
-        }
-      );
+      // 1. Send a POST request to /login
+      const response = await fetch("http://localhost:5000/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
       if (response.ok) {
-        alert("updated");
-      }
-      if (!response.ok) {
-        throw new Error("Failed to update last login time");
+        reset();
+        alert("wow");
+        const userData = await response.json();
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+        console.log("Logged in user:", userData);
+        navigate(from, { replace: true });
       }
 
-      reset();
-      navigate(from, { replace: true });
+      if (response.status === 403) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "User is blocked",
+        });
+        throw new Error("User is blocked");
+      }
+
       console.log(
         "login page creden..."
         // userCredential.user.metadata.lastSignInTime
