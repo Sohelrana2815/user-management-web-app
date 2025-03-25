@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import { axiosPublic } from "../../hooks/axiosPublic";
 
 const Login = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/adminPanel"; // Default redirect path
+  // const location = useLocation();
+  // const from = location.state?.from?.pathname || "/adminPanel"; // Default redirect path
 
   const {
     register,
@@ -15,72 +16,59 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const { email, password } = data;
-    console.log(data);
+    const existingToken = localStorage.getItem("token");
+    if (existingToken) {
+      Swal.fire("Already Logged In", "Please log out first.", "info");
+      return;
+    }
     try {
       // 1. Send a POST request to /login
-      const response = await fetch("http://localhost:5000/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await axiosPublic.post("/api/users/login", data);
+      console.log(data, response);
 
-      if (response.ok) {
-        reset();
-        alert("wow");
-        const userData = await response.json();
-        localStorage.setItem("currentUser", JSON.stringify(userData));
-        console.log("Logged in user:", userData);
-        navigate(from, { replace: true });
+      if (response.status === 200) {
+
+        const { token, user } = response.data;
+        
+        // Store JWT + user in localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("currentUser", JSON.stringify(user));
+
+        Swal.fire("Success", "Login successful", "success");
+        navigate("/adminPanel");
+      } else if (response.status === 401) {
+        Swal.fire("Error", "Invalid email or password", "error");
+      } else if (response.status === 403) {
+        Swal.fire("Blocked", "Account is blocked", "error");
+      } else {
+        Swal.fire("Error", "Login failed", "error");
       }
-
-      if (response.status === 403) {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "User is blocked",
-        });
-        throw new Error("User is blocked");
-      }
-
-      console.log(
-        "login page creden..."
-        // userCredential.user.metadata.lastSignInTime
-      );
     } catch (error) {
-      console.error("Login error:", error.message);
+      console.error("Login error:", error);
+      if (error.response) {
+        const { status } = error.response;
+        if (status === 401) {
+          Swal.fire("Error", "Invalid email or password", "error");
+        } else if (status === 403) {
+          Swal.fire("Blocked", "Account is blocked", "error");
+        } else {
+          Swal.fire("Error", "Login failed", "error");
+        }
+      } else {
+        Swal.fire("Error", error.message, "error");
+      }
+    } finally {
+      console.log("done");
+      reset();
     }
   };
-  // logout
 
   return (
     <>
       <h2 className="absolute text-2xl font-bold p-4">User Management App</h2>
       <div className="flex min-h-screen">
-        {/* 
-        LEFT SECTION (1/2):
-        Holds the Login card in the center
-        w-1/2 -> half width
-        flex-col -> column direction
-        justify-center -> center vertically
-        items-center -> center horizontally
-        p-8 -> padding
-        bg-base-100 -> DaisyUI background color (adjustable)
-      */}
         <div className="w-1/2 border flex flex-col justify-center items-center p-8 bg-base-100">
-          {/* 
-          Card container:
-          w-full max-w-sm -> limit the card width
-          bg-base-100 -> DaisyUI base background
-          shadow-xl -> adds a shadow effect
-        */}
           <div className="card w-full max-w-sm bg-base-100 shadow-xl">
-            {/* 
-            Card body:
-            p-6 -> padding inside the card
-          */}
             <div className="card-body p-6">
               {/* Card Title or Form Title */}
               <h2 className="card-title text-3xl font-bold mb-4">Login</h2>
@@ -160,25 +148,12 @@ const Login = () => {
           </div>
         </div>
 
-        {/* 
-        RIGHT SECTION (1/2):
-        w-1/2 -> half width
-        bg-cover -> background image covers the container
-        bg-center -> center the image
-        style -> add your image path
-      */}
         <div
           className="w-1/2 bg-no-repeat bg-cover"
           style={{
             backgroundImage: "url('../src/assets/login-wallpaper.jpg')",
           }}
-        >
-          {/* Empty or additional overlay if needed */}
-        </div>
-        {/* logout */}
-        {/* <button className="btn btn-primary">
-          Logout
-        </button> */}
+        ></div>
       </div>
     </>
   );

@@ -2,57 +2,34 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 // import LogoutButton from "./LogoutButton"; // import the component
 import Swal from "sweetalert2";
+import { axiosPublic } from "../../hooks/axiosPublic";
 const Registration = () => {
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   // Onsubmit hook form
   const onSubmit = async (data) => {
-    const { name, email, password } = data;
-    console.log(data);
-
+    console.log("clint side Data:", data);
     try {
-      // 1. Send user data to your backend (Express.js)
-      const response = await fetch("http://localhost:5000/api/users/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          createdAt: new Date(),
-          status: "active",
-        }),
-      });
-      // If the response is 201, show success
+      const response = await axiosPublic.post("/api/users/register", data);
       if (response.status === 201) {
-        Swal.fire({
-          title: "Registration success. Please login.",
-          icon: "success",
-          draggable: true,
-        });
+        Swal.fire("Registration successful!", "Please login now.", "success");
         navigate("/");
-      }
-      console.log("User registered and data stored successfully");
-
-      if (!response.ok || response.status === 400) {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Email already exist!",
-        });
-        throw new Error("Failed to store user data in database");
+      } else if (response.status === 400) {
+        Swal.fire("Error", "Email already exists!", "error");
+      } else {
+        Swal.fire("Error", "Registration failed", "error");
       }
     } catch (error) {
-      console.error("Registration error:", error.message);
-      // Handle duplicate email error
-      if (error.message.includes("Email already exists")) {
-        alert("Error email already exist.");
-      }
+      console.error("Registration error:", error);
+      Swal.fire("Error", error.message, "error");
+    } finally {
+      reset();
     }
   };
   return (

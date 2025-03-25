@@ -4,6 +4,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 import UserManagementToolbar from "./UserManagementToolbar";
+import axiosSecure from "../../hooks/axiosSecure";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -16,12 +17,9 @@ const AdminPanel = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/users");
-        if (!response.ok) {
-          throw new Error("Failed to fetch users");
-        }
-        const data = await response.json();
-        setUsers(data);
+        // GET /users
+        const response = await axiosSecure.get("/users");
+        setUsers(response.data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -31,8 +29,7 @@ const AdminPanel = () => {
     fetchUsers();
   }, []);
 
-  // 2. Update header checkbox's indeterminate state
-
+  // 2. Indeterminate checkbox state
   useEffect(() => {
     if (headerCheckboxRef.current) {
       headerCheckboxRef.current.indeterminate =
@@ -40,7 +37,7 @@ const AdminPanel = () => {
     }
   }, [selectedIds, users]);
 
-  // 3. Select/ deselect all
+  // 3. Select/deselect all
   const handleSelectAllChange = (e) => {
     if (e.target.checked) {
       setSelectedIds(users.map((user) => user._id));
@@ -59,12 +56,8 @@ const AdminPanel = () => {
   // Helper to refetch user list
   const refetchUsers = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/users");
-      if (!response.ok) {
-        throw new Error("Failed to fetch updated user list");
-      }
-      const data = await response.json();
-      setUsers(data);
+      const response = await axiosSecure.get("/users");
+      setUsers(response.data);
     } catch (err) {
       console.error("Error refetching users:", err.message);
     }
@@ -76,23 +69,13 @@ const AdminPanel = () => {
   const handleBlock = async () => {
     if (!selectedIds.length) return;
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/users/update-status",
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ids: selectedIds, status: "blocked" }),
-        }
-      );
-
-      if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || "Failed to block users");
-      }
-
-      const data = await response.json();
-      console.log(data.message); // e.g. "Updated 2 users"
+      const response = await axiosSecure.patch("/users/update-status", {
+        ids: selectedIds,
+        status: "blocked",
+      });
+      console.log(response.data.message); // e.g. "Updated 2 users"
       await refetchUsers();
+      setSelectedIds([]);
     } catch (err) {
       console.error("Error blocking users:", err.message);
     }
@@ -101,23 +84,13 @@ const AdminPanel = () => {
   const handleUnblock = async () => {
     if (!selectedIds.length) return;
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/users/update-status",
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ids: selectedIds, status: "active" }),
-        }
-      );
-
-      if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || "Failed to unblock users");
-      }
-
-      const data = await response.json();
-      console.log(data.message);
+      const response = await axiosSecure.patch("/users/update-status", {
+        ids: selectedIds,
+        status: "active",
+      });
+      console.log(response.data.message);
       await refetchUsers();
+      setSelectedIds([]);
     } catch (err) {
       console.error("Error unblocking users:", err.message);
     }
@@ -129,19 +102,11 @@ const AdminPanel = () => {
   const handleDelete = async () => {
     if (!selectedIds.length) return;
     try {
-      const response = await fetch("http://localhost:5000/api/users/delete", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ids: selectedIds }),
+      // axios DELETE with a request body requires `data`
+      const response = await axiosSecure.delete("/users/delete", {
+        data: { ids: selectedIds },
       });
-
-      if (!response.ok) {
-        const { error } = await response.json();
-        throw new Error(error || "Failed to delete users");
-      }
-
-      const data = await response.json();
-      console.log(data.message); // e.g. "Deleted 3 users"
+      console.log(response.data.message); // e.g. "Deleted 3 users"
 
       // Clear the selection
       setSelectedIds([]);
