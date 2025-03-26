@@ -129,7 +129,7 @@ const Registration = () => {
         <div
           className="w-1/2 bg-cover bg-center hidden md:block"
           style={{
-            backgroundImage: "url('../src/assets/register-wallpaper.webp')",
+            backgroundImage: "url('/images/register-wallpaper.webp')",
           }}
         >
           {/* Empty or additional overlay if needed */}
