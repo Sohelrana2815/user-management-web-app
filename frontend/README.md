@@ -6,7 +6,7 @@ A full-stack user management system built with MERN stack (MongoDB, Express, Rea
 ## Live Demo
 
 - **Client**: https://user-management-web-app-client.vercel.app/
-- **Server**: [Include your backend URL if deployed separately]
+- **Server**: https://user-management-web-app-server.onrender.com
 
 ## Features
 
