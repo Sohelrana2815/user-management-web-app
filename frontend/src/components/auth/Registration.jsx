@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-// import LogoutButton from "./LogoutButton"; // import the component
 import Swal from "sweetalert2";
 import { axiosPublic } from "../../hooks/axiosPublic";
 const Registration = () => {
@@ -130,7 +129,7 @@ const Registration = () => {
         <div
           className="w-1/2 bg-cover bg-center"
           style={{
-            backgroundImage: "url('../src/assets/register-wallpaper.jpg')",
+            backgroundImage: "url('../src/assets/register-wallpaper.webp')",
           }}
         >
           {/* Empty or additional overlay if needed */}

@@ -140,7 +140,7 @@ const Login = () => {
         <div
           className="w-1/2 bg-no-repeat bg-cover"
           style={{
-            backgroundImage: "url('../src/assets/login-wallpaper.jpg')",
+            backgroundImage: "url('../src/assets/login-wallpaper.webp')",
           }}
         ></div>
       </div>
