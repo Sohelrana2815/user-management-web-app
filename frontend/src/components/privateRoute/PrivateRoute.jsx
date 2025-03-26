@@ -1,12 +1,30 @@
+import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
-  if (!token) {
-    // No token => not authenticated => redirect
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+
+  useEffect(() => {
+    if (!token) {
+      const timer = setTimeout(() => {
+        setShouldRedirect(true);
+      }, 1500); // 1500ms delay (1.5 seconds)
+      return () => clearTimeout(timer);
+    }
+  }, [token]);
+
+  if (!token && shouldRedirect) {
     return <Navigate to="/" replace />;
   }
-  return children; // Render the protected page
+
+  if (!token) {
+    // Optionally, you can render a loading state while waiting
+    return <div>Loading...</div>;
+  }
+
+  // Render the protected page if authenticated
+  return children;
 };
 
 export default PrivateRoute;
