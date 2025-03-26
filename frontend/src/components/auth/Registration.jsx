@@ -34,11 +34,11 @@ const Registration = () => {
   return (
     <>
       <div className="flex min-h-screen">
-        <div className="w-1/2 flex flex-col justify-center items-center p-8 bg-base-100">
+        <div className="md:w-1/2 w-full flex flex-col justify-center items-center p-8 bg-base-100">
           <div className="card w-full max-w-sm bg-base-100 shadow-xl">
             <div className="card-body p-6">
               {/* Card Title or Form Title */}
-              <h2 className="card-title text-3xl font-bold mb-4">
+              <h2 className="card-title text-2xl md:text-3xl font-bold mb-4">
                 Create an Account
               </h2>
 
@@ -127,7 +127,7 @@ const Registration = () => {
           </div>
         </div>
         <div
-          className="w-1/2 bg-cover bg-center"
+          className="w-1/2 bg-cover bg-center hidden md:block"
           style={{
             backgroundImage: "url('../src/assets/register-wallpaper.webp')",
           }}

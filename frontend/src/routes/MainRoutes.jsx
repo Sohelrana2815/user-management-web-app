@@ -3,7 +3,7 @@ import MainLayout from "../layouts/MainLayout";
 import RegistrationPage from "../components/auth/Registration";
 import LoginPage from "../components/auth/Login";
 import PrivateRoute from "../components/privateRoute/PrivateRoute";
-import AdminPanel from "../components/admin/adminPanel";
+import AdminPanel from "../components/admin/AdminPanel"; // if file is AdminPanel.jsx
 const MainRoutes = () => {
   return (
     <>

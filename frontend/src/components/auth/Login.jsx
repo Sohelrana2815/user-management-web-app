@@ -62,7 +62,7 @@ const Login = () => {
   return (
     <>
       <div className="flex min-h-screen">
-        <div className="w-1/2 flex flex-col justify-center items-center p-8 bg-base-100">
+        <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8 bg-base-100">
           <div className="card w-full max-w-sm bg-base-100 shadow-xl">
             <div className="card-body p-6">
               {/* Card Title or Form Title */}
@@ -138,7 +138,7 @@ const Login = () => {
         </div>
 
         <div
-          className="w-1/2 bg-no-repeat bg-cover"
+          className="w-1/2 bg-no-repeat bg-cover hidden md:block"
           style={{
             backgroundImage: "url('../src/assets/login-wallpaper.webp')",
           }}

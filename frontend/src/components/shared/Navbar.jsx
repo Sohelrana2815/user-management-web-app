@@ -21,7 +21,11 @@ const Navbar = () => {
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
         <div className="dropdown">
-          <p tabIndex={0} role="" className="lg:hidden">
+          <p
+            tabIndex={0}
+            title="Menu"
+            className="lg:hidden md:text-xl hover:text-info hover:cursor-pointer"
+          >
             <MdMenu />
           </p>
           <ul
@@ -32,7 +36,7 @@ const Navbar = () => {
           </ul>
         </div>
         <Link to="/">
-          <p className="pl-2 lg:text-xl text-xs font-mono">
+          <p className="pl-2 md:text-xl text-sm font-mono">
             User Management App
           </p>
         </Link>

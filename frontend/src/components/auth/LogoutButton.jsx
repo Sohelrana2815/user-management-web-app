@@ -36,7 +36,7 @@ function LogoutButton() {
     <button
       disabled={!token}
       onClick={handleLogout}
-      className="btn btn-secondary"
+      className="btn btn-sm md:btn-md btn-secondary"
     >
       Logout
     </button>
