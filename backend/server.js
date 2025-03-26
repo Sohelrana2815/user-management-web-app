@@ -9,33 +9,9 @@ const app = express();
 
 app.use(express.json());
 
-// Allowed origin
-const allowedOrigins = ["https://user-management-web-app-client.vercel.app"];
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    console.log("Incoming origin:", origin);
-    // Allow requests with no origin (e.g., Postman)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      console.error("Blocked by CORS:", origin);
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
-
-// Uncomment the next two lines to allow all origins (for testing)
-// app.use(cors());
-// app.options("*", cors());
-
-// Use specific CORS settings
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+// Allow all origins for debugging purposes
+app.use(cors());
+app.options("*", cors());
 
 // Connect to MongoDB
 const connectDB = async () => {
