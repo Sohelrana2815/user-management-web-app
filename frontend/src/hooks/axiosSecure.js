@@ -3,7 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const axiosSecure = axios.create({
-  baseURL: "http://localhost:5000/api", // Your server's base URL
+  baseURL: "https://user-management-web-app-server.onrender.com/api", // Your server's base URL
 });
 
 // Request Interceptor: Attach JWT
