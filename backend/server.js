@@ -7,29 +7,33 @@ import userRoutes from "./routes/userRoutes.js";
 dotenv.config();
 const app = express();
 
-// Middleware to parse JSON bodies
 app.use(express.json());
 
-// Define allowed origin(s)
+// Allowed origin
 const allowedOrigins = ["https://user-management-web-app-client.vercel.app"];
 
-// CORS configuration
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
+    console.log("Incoming origin:", origin);
+    // Allow requests with no origin (e.g., Postman)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     } else {
+      console.error("Blocked by CORS:", origin);
       return callback(new Error("Not allowed by CORS"));
     }
   },
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true, // Enable if you need to allow cookies or authentication
-  optionsSuccessStatus: 200, // Some legacy browsers choke on 204
+  credentials: true,
+  optionsSuccessStatus: 200,
 };
 
-// Apply CORS middleware
+// Uncomment the next two lines to allow all origins (for testing)
+// app.use(cors());
+// app.options("*", cors());
+
+// Use specific CORS settings
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
