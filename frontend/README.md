@@ -1,7 +1,6 @@
 # User Management Web Application
 
-![Unique Index Screenshot](https://i.ibb.co.com/LD0pfZ3r/Screenshot-2025-03-26-201829.png)
-
+![Screenshot 2025-03-26 201829](https://github.com/user-attachments/assets/54c0fb2c-1f68-4895-b4ac-d3a5fe39a6d4)
 A full-stack user management system built with MERN stack (MongoDB, Express, React, Node.js).
 
 ## Live Demo
