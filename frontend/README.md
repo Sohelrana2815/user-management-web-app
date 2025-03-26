@@ -1,12 +1,50 @@
-# React + Vite
+# User Management Web Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Unique Index Screenshot](https://i.ibb.co.com/LD0pfZ3r/Screenshot-2025-03-26-201829.png)
 
-Currently, two official plugins are available:
+A full-stack user management system built with MERN stack (MongoDB, Express, React, Node.js).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Live Demo
 
-## Expanding the ESLint configuration
+- **Client**: https://user-management-web-app-client.vercel.app/
+- **Server**: [Include your backend URL if deployed separately]
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Features
+
+✅ User registration & authentication  
+✅ Admin panel with user management:  
+   - Block/Unblock users  
+   - Delete multiple users  
+   - Sort by last login/registration time  
+✅ Unique email validation via MongoDB index  
+✅ Responsive design (works on mobile/desktop)  
+✅ Toolbar actions with multi-select checkboxes  
+✅ Automatic logout for blocked/deleted users  
+✅ Error handling with user feedback  
+
+## Technologies Used
+
+### Frontend
+- React.js
+- React Router
+- Axios
+- Tailwind CSS (CSS Framework)
+- React Toastify
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB (with unique index)
+- Mongoose ODM
+- JWT Authentication
+
+### Deployment
+- Vercel (Frontend)
+- Render (Backend)
+- MongoDB Atlas (Database)
+
+## Installation
+
+1. Clone repository:
+```bash
+git clone https://github.com/Sohelrana2815/user-management-web-app.git
