@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from "react";
+// Day.js + relativeTime plugin
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
-
 import UserManagementToolbar from "./UserManagementToolbar";
 import axiosSecure from "../../hooks/axiosSecure";
 import Swal from "sweetalert2";
@@ -77,15 +77,23 @@ const AdminPanel = () => {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: "Yes, block it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await axiosSecure.patch("/users/update-status", {
+            ids: selectedIds,
+            status: "blocked",
+          });
+          console.log(response.data.message); // e.g. "Updated 2 users"
+          await refetchUsers();
+          setSelectedIds([]);
+          Swal.fire({
+            title: "Blocked!",
+            text: "Your file has been blocked.",
+            icon: "success",
+          });
+        }
       });
-      const response = await axiosSecure.patch("/users/update-status", {
-        ids: selectedIds,
-        status: "blocked",
-      });
-      console.log(response.data.message); // e.g. "Updated 2 users"
-      await refetchUsers();
-      setSelectedIds([]);
     } catch (err) {
       console.error("Error blocking users:", err.message);
     }
@@ -112,17 +120,32 @@ const AdminPanel = () => {
   const handleDelete = async () => {
     if (!selectedIds.length) return;
     try {
-      // axios DELETE with a request body requires `data`
-      const response = await axiosSecure.delete("/users/delete", {
-        data: { ids: selectedIds },
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          // axios DELETE with a request body requires `data`
+          const response = await axiosSecure.delete("/users/delete", {
+            data: { ids: selectedIds },
+          });
+          console.log(response.data.message); // e.g. "Deleted 3 users"
+          // Clear the selection
+          setSelectedIds([]);
+          // Refetch the updated user list
+          await refetchUsers();
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success",
+          });
+        }
       });
-      console.log(response.data.message); // e.g. "Deleted 3 users"
-
-      // Clear the selection
-      setSelectedIds([]);
-
-      // Refetch the updated user list
-      await refetchUsers();
     } catch (err) {
       console.error("Error deleting users:", err.message);
     }

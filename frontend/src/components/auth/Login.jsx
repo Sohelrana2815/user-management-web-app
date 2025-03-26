@@ -32,7 +32,7 @@ const Login = () => {
         // Store JWT + user in localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("currentUser", JSON.stringify(user));
-
+        reset();
         Swal.fire("Success", "Login successful", "success");
         navigate("/adminPanel");
       } else if (response.status === 401) {
@@ -56,9 +56,6 @@ const Login = () => {
       } else {
         Swal.fire("Error", error.message, "error");
       }
-    } finally {
-      console.log("done");
-      reset();
     }
   };
 

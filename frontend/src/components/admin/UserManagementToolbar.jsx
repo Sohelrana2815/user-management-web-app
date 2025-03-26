@@ -35,7 +35,7 @@ const UserManagementToolbar = ({
         onClick={onDelete}
         disabled={selectedIds.length === 0}
       >
-        <FaTrash className="text-bla" />
+        <FaTrash />
       </button>
     </div>
   );
