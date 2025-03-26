@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router";
+import Swal from "sweetalert2";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -15,6 +16,11 @@ const PrivateRoute = ({ children }) => {
   }, [token]);
 
   if (!token && shouldRedirect) {
+    Swal.fire({
+      title: "Blocked!",
+      text: "User has been blocked!",
+      icon: "success",
+    });
     return <Navigate to="/" replace />;
   }
 

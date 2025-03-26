@@ -87,11 +87,6 @@ const AdminPanel = () => {
           console.log(response.data.message); // e.g. "Updated 2 users"
           await refetchUsers();
           setSelectedIds([]);
-          Swal.fire({
-            title: "Blocked!",
-            text: "User has been blocked!",
-            icon: "success",
-          });
         }
       });
     } catch (err) {
@@ -146,11 +141,6 @@ const AdminPanel = () => {
           setSelectedIds([]);
           // Refetch the updated user list
           await refetchUsers();
-          Swal.fire({
-            title: "User Deleted!",
-            text: "The user has been removed successfully.",
-            icon: "success",
-          });
         }
       });
     } catch (err) {
