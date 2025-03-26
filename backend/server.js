@@ -12,8 +12,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      "https://user-management-auth-1fed6.web.app",
-      "https://user-management-auth-1fed6.firebaseapp.com",
+      "https://user-management-web-app-client.vercel.app",
     ],
   })
 );
