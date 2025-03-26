@@ -9,9 +9,29 @@ const app = express();
 
 app.use(express.json());
 
-// Allow all origins for debugging purposes
-app.use(cors());
-app.options("*", cors());
+// Define allowed origin(s)
+const allowedOrigins = ["https://user-management-web-app-client.vercel.app"];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    console.log("Incoming origin:", origin); // Debug: log incoming origin
+    // Allow requests with no origin (e.g., Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      console.error("Blocked by CORS:", origin); // Debug: log blocked origins
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+// Use specific CORS settings
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // Connect to MongoDB
 const connectDB = async () => {
