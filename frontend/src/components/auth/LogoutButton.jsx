@@ -25,7 +25,7 @@ function LogoutButton() {
           text: "You’ve been signed out successfully.",
           icon: "success",
         });
-        navigate("/login");
+        navigate("/");
       }
     });
 

@@ -1,11 +1,12 @@
 import { Link, NavLink } from "react-router";
 import LogoutButton from "../auth/LogoutButton";
+import { MdMenu } from "react-icons/md";
 
 const Navbar = () => {
   const navLinks = (
     <>
       <li>
-        <NavLink to="/login">Login</NavLink>
+        <NavLink to="/">Login</NavLink>
       </li>
       <li>
         <NavLink to="/registration">Register</NavLink>
@@ -20,23 +21,9 @@ const Navbar = () => {
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              {" "}
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />{" "}
-            </svg>
-          </div>
+          <p tabIndex={0} role="" className="lg:hidden">
+            <MdMenu />
+          </p>
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
@@ -45,7 +32,9 @@ const Navbar = () => {
           </ul>
         </div>
         <Link to="/">
-          <p className="btn btn-ghost text-xl">User Management App</p>
+          <p className="pl-2 lg:text-xl text-xs font-mono">
+            User Management App
+          </p>
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex">

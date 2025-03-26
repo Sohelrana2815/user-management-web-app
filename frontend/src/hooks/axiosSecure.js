@@ -35,7 +35,7 @@ axiosSecure.interceptors.response.use(
         Swal.fire("Session Ended", "Please log in again.", "info");
 
         // Force redirect to login
-        window.location.href = "/login"; // or "/login"
+        window.location.href = "/"; // or "/login"
       }
     }
     return Promise.reject(error);

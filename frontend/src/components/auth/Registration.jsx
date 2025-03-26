@@ -18,7 +18,7 @@ const Registration = () => {
       const response = await axiosPublic.post("/api/users/register", data);
       if (response.status === 201) {
         Swal.fire("Registration successful!", "Please login now.", "success");
-        navigate("/login");
+        navigate("/");
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -119,7 +119,7 @@ const Registration = () => {
               {/* Sign In link if user already has an account */}
               <p className="text-sm text-center">
                 Already have an account?{" "}
-                <Link to="/login" className="text-blue-500 hover:text-blue-700">
+                <Link to="/" className="text-blue-500 hover:text-blue-700">
                   Log in
                 </Link>
               </p>
