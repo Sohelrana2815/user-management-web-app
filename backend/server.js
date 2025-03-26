@@ -20,7 +20,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+app.options("*", cors(corsOptions));
 // Connect to MongoDB
 const connectDB = async () => {
   try {
