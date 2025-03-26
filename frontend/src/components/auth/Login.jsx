@@ -27,9 +27,8 @@ const Login = () => {
       console.log(data, response);
 
       if (response.status === 200) {
-
         const { token, user } = response.data;
-        
+
         // Store JWT + user in localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("currentUser", JSON.stringify(user));
@@ -65,9 +64,8 @@ const Login = () => {
 
   return (
     <>
-      <h2 className="absolute text-2xl font-bold p-4">User Management App</h2>
       <div className="flex min-h-screen">
-        <div className="w-1/2 border flex flex-col justify-center items-center p-8 bg-base-100">
+        <div className="w-1/2 flex flex-col justify-center items-center p-8 bg-base-100">
           <div className="card w-full max-w-sm bg-base-100 shadow-xl">
             <div className="card-body p-6">
               {/* Card Title or Form Title */}
@@ -124,12 +122,6 @@ const Login = () => {
                   <button type="submit" className="btn btn-primary">
                     Sign In
                   </button>
-                  <a
-                    href="#forgot-password"
-                    className="text-sm text-blue-500 hover:text-blue-700"
-                  >
-                    Forgot Password?
-                  </a>
                 </div>
               </form>
               {/* End of Form */}
@@ -138,7 +130,7 @@ const Login = () => {
               <p className="text-sm text-center">
                 Don’t have an account?{" "}
                 <Link
-                  to="registration"
+                  to="/registration"
                   className="text-blue-500 hover:text-blue-700"
                 >
                   Sign up

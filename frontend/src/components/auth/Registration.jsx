@@ -9,7 +9,7 @@ const Registration = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
+    // reset,
   } = useForm();
 
   // Onsubmit hook form
@@ -19,53 +19,24 @@ const Registration = () => {
       const response = await axiosPublic.post("/api/users/register", data);
       if (response.status === 201) {
         Swal.fire("Registration successful!", "Please login now.", "success");
-        navigate("/");
-      } else if (response.status === 400) {
-        Swal.fire("Error", "Email already exists!", "error");
-      } else {
-        Swal.fire("Error", "Registration failed", "error");
+        navigate("/login");
       }
     } catch (error) {
-      console.error("Registration error:", error);
-      Swal.fire("Error", error.message, "error");
-    } finally {
-      reset();
+      if (error.response && error.response.status === 400) {
+        // Handle 400 error separately for duplicate email
+        Swal.fire("Error", "Email already exists!", "error");
+        console.log(error);
+      } else {
+        console.error("Registration error:", error);
+        Swal.fire("Error", error.message, "error");
+      }
     }
   };
   return (
-    /*
-    Parent container: flex -> display columns side by side min-h-screen ->
-    full viewport height
-    */
     <>
-      {/* You can place the logout button where it makes sense in your layout */}
-      {/* <div className="btn btn-primary">
-        <LogoutButton />
-      </div> */}
-      <h2 className="absolute text-2xl font-bold p-4">User Management App</h2>
       <div className="flex min-h-screen">
-        {/* 
-        LEFT SECTION (1/2):
-        Holds the Registration card in the center
-        w-1/2 -> half width
-        flex-col -> column direction
-        justify-center -> center vertically
-        items-center -> center horizontally
-        p-8 -> padding
-        bg-base-100 -> DaisyUI background color (adjustable)
-      */}
         <div className="w-1/2 flex flex-col justify-center items-center p-8 bg-base-100">
-          {/* 
-          Card container:
-          w-full max-w-sm -> limit the card width
-          bg-base-100 -> DaisyUI base background
-          shadow-xl -> adds a shadow effect
-        */}
           <div className="card w-full max-w-sm bg-base-100 shadow-xl">
-            {/* 
-            Card body:
-            p-6 -> padding inside the card
-          */}
             <div className="card-body p-6">
               {/* Card Title or Form Title */}
               <h2 className="card-title text-3xl font-bold mb-4">
@@ -149,21 +120,13 @@ const Registration = () => {
               {/* Sign In link if user already has an account */}
               <p className="text-sm text-center">
                 Already have an account?{" "}
-                <Link to="/" className="text-blue-500 hover:text-blue-700">
+                <Link to="/login" className="text-blue-500 hover:text-blue-700">
                   Log in
                 </Link>
               </p>
             </div>
           </div>
         </div>
-
-        {/* 
-        RIGHT SECTION (1/2):
-        w-1/2 -> half width
-        bg-cover -> background image covers the container
-        bg-center -> center the image
-        style -> add your image path
-      */}
         <div
           className="w-1/2 bg-cover bg-center"
           style={{

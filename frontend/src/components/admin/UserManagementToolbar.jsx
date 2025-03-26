@@ -10,17 +10,18 @@ const UserManagementToolbar = ({
     <div className="bg-gray-100 p-4 flex items-center gap-2">
       {/* Block button (text + icon) */}
       <button
-        className="btn btn-sm flex items-center gap-2"
+        className="btn btn-sm btn-outline text-red-700 flex items-center gap-2"
         onClick={onBlock}
         disabled={selectedIds.length === 0}
       >
-        <FaLock />
+        <FaLock className="text-red-700" />
         <span>Block</span>
       </button>
 
       {/* Unlock button (icon only) */}
       <button
-        className="btn btn-sm"
+        title="Unblock"
+        className="btn btn-sm btn-outline text-green-600"
         onClick={onUnblock}
         disabled={selectedIds.length === 0}
       >
@@ -29,11 +30,12 @@ const UserManagementToolbar = ({
 
       {/* Delete button (icon only) */}
       <button
-        className="btn btn-sm"
+        title="Delete"
+        className="btn btn-sm btn-outline text-red-700"
         onClick={onDelete}
         disabled={selectedIds.length === 0}
       >
-        <FaTrash />
+        <FaTrash className="text-bla" />
       </button>
     </div>
   );

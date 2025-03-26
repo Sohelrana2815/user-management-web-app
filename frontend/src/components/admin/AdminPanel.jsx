@@ -5,6 +5,7 @@ dayjs.extend(relativeTime);
 
 import UserManagementToolbar from "./UserManagementToolbar";
 import axiosSecure from "../../hooks/axiosSecure";
+import Swal from "sweetalert2";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -69,6 +70,15 @@ const AdminPanel = () => {
   const handleBlock = async () => {
     if (!selectedIds.length) return;
     try {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
       const response = await axiosSecure.patch("/users/update-status", {
         ids: selectedIds,
         status: "blocked",
