@@ -7,11 +7,19 @@ import userRoutes from "./routes/userRoutes.js";
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(
-  cors({
-    origin: ["https://user-management-web-app-client.vercel.app"],
-  })
-);
+
+const corsOptions = {
+  origin: [
+    "https://user-management-web-app-client.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:5174", // For local testing
+  ],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 
 // Connect to MongoDB
 const connectDB = async () => {
