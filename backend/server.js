@@ -9,11 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "https://user-management-web-app-client.vercel.app",
-    ],
+    origin: ["https://user-management-web-app-client.vercel.app"],
   })
 );
 
