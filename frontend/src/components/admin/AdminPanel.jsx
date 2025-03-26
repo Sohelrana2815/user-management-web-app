@@ -71,13 +71,13 @@ const AdminPanel = () => {
     if (!selectedIds.length) return;
     try {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: "Block User",
+        text: "Are you sure you want to block this user? blocked users don't be able to login",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, block it!",
+        confirmButtonText: "Yes, block!",
       }).then(async (result) => {
         if (result.isConfirmed) {
           const response = await axiosSecure.patch("/users/update-status", {
@@ -89,7 +89,7 @@ const AdminPanel = () => {
           setSelectedIds([]);
           Swal.fire({
             title: "Blocked!",
-            text: "Your file has been blocked.",
+            text: "User has been blocked!",
             icon: "success",
           });
         }
@@ -106,9 +106,16 @@ const AdminPanel = () => {
         ids: selectedIds,
         status: "active",
       });
-      console.log(response.data.message);
-      await refetchUsers();
-      setSelectedIds([]);
+      if (response.status === 200) {
+        await refetchUsers();
+        setSelectedIds([]);
+        Swal.fire({
+          title: "User Unblocked",
+          text: "The user has been successfully unblocked.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      }
     } catch (err) {
       console.error("Error unblocking users:", err.message);
     }
@@ -121,8 +128,8 @@ const AdminPanel = () => {
     if (!selectedIds.length) return;
     try {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: "Delete User?",
+        text: "This will permanently remove the user and all their data. But user can re-register as well.",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -140,8 +147,8 @@ const AdminPanel = () => {
           // Refetch the updated user list
           await refetchUsers();
           Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
+            title: "User Deleted!",
+            text: "The user has been removed successfully.",
             icon: "success",
           });
         }
